@@ -1,0 +1,3 @@
+
+string filePath;
+float duration;

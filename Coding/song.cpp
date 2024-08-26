@@ -1,9 +1,11 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 using namespace std;
 
 class Song {
+
 private:
 string songName;
 string musicianName;
@@ -33,6 +35,7 @@ class Listener {
 private:
 string name;
 vector<Song> collection; 
+vector<Song> favorites;
 
 public:
 
@@ -58,6 +61,32 @@ void viewFilePath(const string& songName) const {
         }
     }
     cout << "Song '" << songName << "' not found in the collection." << endl;
+}
+
+void deleteSong(const string& songName) {
+        auto it = remove_if(collection.begin(), collection.end(),
+            [&songName](const Song& song) { return song.getSongName() == songName; });
+        collection.erase(it, collection.end());  
+    }
+
+    void addToFavorites(const string& songName) {
+        for (const auto& song : collection) {
+            if (song.getSongName() == songName) {
+                favorites.push_back(song);
+                return;
+            }
+        }
+        cout << "Song '" << songName << "' not found in the collection." << endl;
+    }
+
+        void viewFavorites() const {
+        cout << "Favorite Songs:\n";
+        for (const auto& song : favorites) {  
+            song.printDetails();                   /
+
+            cout << "-------------------------\n";
+        }
+
 }
 };
 
@@ -112,6 +141,13 @@ cout << "\nEnter the name of the song to view its file path: ";
 getline(cin, songToFind);
 
 listener.viewFilePath(songToFind);
+
+ listener.deleteSong(songToFind);
+
+ listener.addToFavorites(songToFind);
+
+ cout << "Favorite Songs:\n";
+    listener.viewFavorites();
 
 return 0;
 }
